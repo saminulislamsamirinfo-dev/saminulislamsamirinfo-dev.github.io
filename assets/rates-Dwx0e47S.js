@@ -1,0 +1,1 @@
+var e=e=>Math.round((Number(e)||0)*120),t=e=>(Number(e)||0)/120,n=e=>`$${(Number(e)||0).toFixed(2)}`,r=`Indicative rate: $1 ≈ ৳120 · for guidance only`;export{e as i,t as n,n as r,r as t};

@@ -1,0 +1,1 @@
+var e=e=>typeof e==`string`?e.replace(/Nagad/g,`NAGAD`):e;export{e as t};
