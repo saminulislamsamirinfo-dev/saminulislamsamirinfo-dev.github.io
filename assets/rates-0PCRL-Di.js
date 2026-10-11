@@ -1,0 +1,1 @@
+var e=e=>(Number(e)||0)/120,t=e=>`$${(Number(e)||0).toFixed(2)}`,n=`Indicative rate: $1 ≈ ৳120 · for guidance only`;export{e as n,t as r,n as t};
