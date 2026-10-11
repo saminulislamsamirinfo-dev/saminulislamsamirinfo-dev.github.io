@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /adminspropay
+Disallow: /dashboard
+Disallow: /checkout
+Disallow: /invoice/
+Disallow: /onboarding
+Disallow: /payment-success
+
+Sitemap: https://samirpropayments.online/sitemap.xml
