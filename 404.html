@@ -3,27 +3,29 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SamirProPayments — Payments to Your Own Number, Verified Automatically</title>
+    <title>Samir Pro Payments — Payments to Your Own Number, Verified Automatically</title>
     <meta name="description" content="Accept bKash, NAGAD, Rocket, Upay, UPI & Binance payments to your own number — auto-verified in seconds, 0% transaction fees, no merchant account needed. Secure · Fast · Flexible." />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://samirpropayments.online/" />
     <meta name="theme-color" content="#170B2E" />
+    <meta name="application-name" content="Samir Pro Payments" />
+    <meta name="apple-mobile-web-app-title" content="Samir Pro Payments" />
     <link rel="icon" type="image/png" sizes="512x512" href="/logo-circular-t.png" />
     <link rel="shortcut icon" type="image/png" href="/logo-circular-t.png" />
     <link rel="apple-touch-icon" href="/logo-circular-t.png" />
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="SamirProPayments" />
-    <meta property="og:title" content="SamirProPayments — Payments to Your Own Number, Verified Automatically" />
+    <meta property="og:site_name" content="Samir Pro Payments" />
+    <meta property="og:title" content="Samir Pro Payments — Payments to Your Own Number, Verified Automatically" />
     <meta property="og:description" content="Accept bKash, NAGAD, Rocket, Upay, UPI & Binance payments to your own number — auto-verified in seconds, 0% transaction fees, no merchant account needed. Secure · Fast · Flexible." />
     <meta property="og:url" content="https://samirpropayments.online/" />
     <meta property="og:image" content="https://samirpropayments.online/og-image.jpg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="SamirProPayments — Payments to Your Own Number, Verified Automatically" />
+    <meta property="og:image:alt" content="Samir Pro Payments — Payments to Your Own Number, Verified Automatically" />
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="SamirProPayments — Payments to Your Own Number, Verified Automatically" />
+    <meta name="twitter:title" content="Samir Pro Payments — Payments to Your Own Number, Verified Automatically" />
     <meta name="twitter:description" content="Accept bKash, NAGAD, Rocket, Upay, UPI & Binance payments to your own number — auto-verified in seconds, 0% transaction fees, no merchant account needed. Secure · Fast · Flexible." />
     <meta name="twitter:image" content="https://samirpropayments.online/og-image.jpg" />
     <!-- Structured data -->
@@ -33,7 +35,8 @@
       "@graph": [
         {
           "@type": "Organization",
-          "name": "SamirProPayments",
+          "name": "Samir Pro Payments",
+          "alternateName": "SamirProPayments",
           "url": "https://samirpropayments.online/",
           "logo": "https://samirpropayments.online/logo-circular-t.png",
           "slogan": "Secure · Fast · Flexible",
@@ -45,7 +48,8 @@
         },
         {
           "@type": "WebSite",
-          "name": "SamirProPayments",
+          "name": "Samir Pro Payments",
+          "alternateName": "SamirProPayments",
           "url": "https://samirpropayments.online/"
         }
       ]
@@ -70,24 +74,73 @@
       } catch (e) { /* storage unavailable — stay light */ }
     </script>
     <style>
-      /* Round 106 — boot splash: one calm branded state from the very
-         first paint until React mounts and replaces #root's content,
-         so a cold open never shows a blank page (or, later, a skeleton
-         flash). Pure CSS + text — no image loads before the app. The
-         dark variant keys off the data-theme attribute the pre-paint
-         script above sets. */
-      .boot-splash { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; background: #FDF9FC; }
-      html[data-theme="dark"] .boot-splash { background: #14092B; }
-      .boot-ring { width: 46px; height: 46px; border-radius: 50%; border: 3px solid rgba(236,0,140,.16); border-top-color: #EC008C; border-right-color: #FF7A18; animation: bootSpin .8s linear infinite; }
-      .boot-word { font-family: Inter, system-ui, -apple-system, sans-serif; font-size: 20px; font-weight: 800; letter-spacing: -.01em; color: #1B1035; }
-      .boot-word em { font-style: normal; color: #EC008C; }
-      html[data-theme="dark"] .boot-word { color: #FFFFFF; }
-      @keyframes bootSpin { to { transform: rotate(360deg) } }
-      @media (prefers-reduced-motion: reduce) { .boot-ring { animation: none; } }
+      /* Round 163 — instant branded shell: a static replica of the site's
+         header + hero skeleton, inlined so it paints the moment this HTML
+         arrives — before a single JS byte downloads. It lives OUTSIDE
+         #root (React's first commit is empty while Firebase Auth
+         resolves, which used to wipe the old in-root splash and leave a
+         blank page on slow links). The inline script after it removes it
+         the moment React renders real content into #root. Its nav links
+         and CTAs are real anchors, so even if the app bundle never loads
+         the visitor is never trapped: they can still navigate, and a
+         "tap to reload" hint appears after 7s. The dark variant keys off
+         the data-theme attribute the pre-paint script above sets. */
+      .boot-shell { position: fixed; inset: 0; z-index: 1500; overflow: hidden; background: radial-gradient(1000px 520px at 88% -10%, rgba(255,122,24,.2), transparent 60%), radial-gradient(900px 520px at -12% 15%, rgba(236,0,140,.16), transparent 55%), linear-gradient(175deg, #FFF7FB 0%, #FDFBFF 52%, #F4EFFF 100%); font-family: Inter, system-ui, -apple-system, sans-serif; transition: opacity .2s ease; }
+      .boot-shell--out { opacity: 0; pointer-events: none; }
+      html[data-theme="dark"] .boot-shell { background: radial-gradient(1000px 520px at 88% -10%, rgba(255,122,24,.14), transparent 60%), radial-gradient(900px 520px at -12% 15%, rgba(236,0,140,.12), transparent 55%), #14092B; }
+      .bs-bar { background: rgba(255,255,255,.94); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid rgba(226,232,240,.8); }
+      html[data-theme="dark"] .bs-bar { background: rgba(20,9,43,.92); border-bottom-color: rgba(255,255,255,.08); }
+      .bs-bar-inner { max-width: 1240px; margin: 0 auto; padding: 12px 20px; display: flex; align-items: center; gap: 16px; }
+      .bs-logo { display: flex; align-items: center; text-decoration: none; background: linear-gradient(135deg, #1B1035, #251545); border-radius: 12px; padding: 6px 12px; box-shadow: 0 10px 24px rgba(27,16,53,.22), inset 0 0 0 1px rgba(255,255,255,.07); }
+      html[data-theme="dark"] .bs-logo { background: transparent; box-shadow: none; padding-left: 0; }
+      .bs-logo img { height: 46px; width: auto; max-width: 46vw; object-fit: contain; display: block; mix-blend-mode: screen; }
+      .bs-nav { display: none; margin: 0 auto; gap: 28px; }
+      .bs-nav a { color: #4B4763; font-size: 15px; font-weight: 600; text-decoration: none; }
+      html[data-theme="dark"] .bs-nav a { color: #B9B3D0; }
+      @media (min-width: 961px) { .bs-nav { display: flex; } }
+      .bs-cta { margin-left: auto; background: linear-gradient(135deg, #EC008C, #FF7A18); color: #fff; font-size: 15px; font-weight: 800; text-decoration: none; padding: 12px 22px; border-radius: 14px; box-shadow: 0 10px 24px rgba(236,0,140,.3); white-space: nowrap; }
+      @media (min-width: 961px) { .bs-cta { margin-left: 0; } }
+      .bs-hero-inner { max-width: 1240px; margin: 0 auto; padding: 92px 20px 84px; display: grid; grid-template-columns: 1.05fr .95fr; gap: 56px; align-items: center; }
+      @media (max-width: 980px) { .bs-hero-inner { grid-template-columns: 1fr; padding-top: 64px; } }
+      @media (max-width: 640px) { .bs-hero-inner { padding: 54px 16px 50px; gap: 34px; } .bs-bar-inner { padding: 10px 16px; } }
+      .bs-pill { display: inline-flex; align-items: center; background: rgba(236,0,140,.1); color: #C2185B; font-size: 13px; font-weight: 700; padding: 7px 14px; border-radius: 999px; }
+      html[data-theme="dark"] .bs-pill { color: #FF7AC0; }
+      .bs-sk { border-radius: 12px; background: linear-gradient(100deg, rgba(27,16,53,.09) 40%, rgba(27,16,53,.16) 50%, rgba(27,16,53,.09) 60%); background-size: 200% 100%; animation: bsShimmer 1.5s linear infinite; }
+      html[data-theme="dark"] .bs-sk { background: linear-gradient(100deg, rgba(255,255,255,.08) 40%, rgba(255,255,255,.15) 50%, rgba(255,255,255,.08) 60%); background-size: 200% 100%; }
+      @keyframes bsShimmer { to { background-position: -200% 0; } }
+      .bs-h1 { margin: 22px 0 20px; display: flex; flex-direction: column; gap: 12px; }
+      .bs-h1 .bs-sk { height: 56px; }
+      @media (max-width: 640px) { .bs-h1 .bs-sk { height: 38px; } }
+      .bs-lead { display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
+      .bs-lead .bs-sk { height: 15px; border-radius: 8px; }
+      .bs-ctas { display: flex; gap: 14px; flex-wrap: wrap; }
+      .bs-btn { font-size: 16px; font-weight: 800; text-decoration: none; padding: 15px 28px; border-radius: 14px; }
+      .bs-btn--primary { background: linear-gradient(135deg, #EC008C, #FF7A18); color: #fff; box-shadow: 0 14px 30px rgba(236,0,140,.35); }
+      .bs-btn--ghost { background: #fff; color: #C2185B; border: 1px solid rgba(236,0,140,.45); }
+      html[data-theme="dark"] .bs-btn--ghost { background: rgba(255,255,255,.06); color: #FF7AC0; }
+      .bs-points { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 26px; }
+      .bs-points .bs-sk { height: 26px; border-radius: 999px; }
+      .bs-media-card { background: #170B2E; border: 1px solid rgba(27,16,53,.25); border-radius: 20px; overflow: hidden; box-shadow: 0 40px 90px rgba(23,11,46,.4); aspect-ratio: 2048 / 682; display: flex; align-items: center; justify-content: center; }
+      .bs-media-card img { width: 100%; height: 100%; object-fit: contain; mix-blend-mode: screen; display: block; }
+      .bs-media-row { display: flex; gap: 16px; margin-top: 16px; }
+      .bs-media-row .bs-sk { height: 108px; flex: 1; border-radius: 20px; }
+      .bs-slow { position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%); background: #170B2E; color: #fff; font-size: 13.5px; font-weight: 600; padding: 10px 18px; border-radius: 999px; box-shadow: 0 16px 40px rgba(23,11,46,.45); white-space: nowrap; }
+      .bs-slow a { color: #FFB37A; }
+      .boot-noscript { position: fixed; inset: auto 16px 16px; z-index: 1600; background: #170B2E; color: #fff; font-family: Inter, system-ui, sans-serif; font-size: 15px; line-height: 1.55; padding: 18px 20px; border-radius: 16px; }
+      .boot-noscript a { color: #FFB37A; font-weight: 700; }
+      @media (prefers-reduced-motion: reduce) { .bs-sk { animation: none; } }
     </style>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Hind+Siliguri:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <!-- Round 163: fonts split by first-paint need. Inter + Poppins carry
+         the homepage and stay render-blocking; Hind Siliguri (Bengali
+         glyphs) and JetBrains Mono (IDs/numbers in panels + checkout)
+         load async — with display=swap they were never painted before
+         arrival anyway, so nothing visible changes except that they no
+         longer hold up first paint on slow links. -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" /></noscript>
     <script type="module" crossorigin src="/assets/index-ujGVjGT8.js"></script>
     <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-Bh1tDfsg.js">
     <link rel="modulepreload" crossorigin href="/assets/vendor-MoN2eFRA.js">
@@ -98,11 +151,85 @@
     <link rel="stylesheet" crossorigin href="/assets/index-BlFHc475.css">
   </head>
   <body>
-    <div id="root">
-      <div class="boot-splash" aria-hidden="true">
-        <span class="boot-ring"></span>
-        <span class="boot-word">Samir<em>Pro</em>Payments</span>
+    <!-- Round 163: instant branded shell (styles in <head>). Painted from
+         the raw HTML, removed by the script below when React renders. -->
+    <div class="boot-shell" id="boot-shell" aria-hidden="true">
+      <header class="bs-bar">
+        <div class="bs-bar-inner">
+          <a class="bs-logo" href="/" aria-label="Samir Pro Payments — home">
+            <img src="/logo-wide.png" alt="Samir Pro Payments" width="2048" height="682" fetchpriority="high" />
+          </a>
+          <nav class="bs-nav">
+            <a href="/features">Features</a>
+            <a href="/pricing">Pricing</a>
+            <a href="/demo">Live Demo</a>
+            <a href="/docs">Docs</a>
+            <a href="/about">About</a>
+          </nav>
+          <a class="bs-cta" href="/register">Get Started</a>
+        </div>
+      </header>
+      <div class="bs-hero-inner">
+        <div>
+          <span class="bs-pill">Payment Automation for Bangladesh</span>
+          <div class="bs-h1">
+            <span class="bs-sk" style="width:96%"></span>
+            <span class="bs-sk" style="width:84%"></span>
+            <span class="bs-sk" style="width:58%"></span>
+          </div>
+          <div class="bs-lead">
+            <span class="bs-sk" style="width:100%"></span>
+            <span class="bs-sk" style="width:74%"></span>
+          </div>
+          <div class="bs-ctas">
+            <a class="bs-btn bs-btn--primary" href="/register">Get Started for Free</a>
+            <a class="bs-btn bs-btn--ghost" href="/demo">Live Demo - Sandbox</a>
+          </div>
+          <div class="bs-points">
+            <span class="bs-sk" style="width:150px"></span>
+            <span class="bs-sk" style="width:170px"></span>
+            <span class="bs-sk" style="width:140px"></span>
+          </div>
+        </div>
+        <div>
+          <div class="bs-media-card"><img src="/logo-wide.png" alt="" width="2048" height="682" /></div>
+          <div class="bs-media-row"><span class="bs-sk"></span><span class="bs-sk"></span></div>
+        </div>
       </div>
+      <p class="bs-slow" id="boot-slow" hidden>Still loading on a slow connection… <a href="" onclick="location.reload(); return false;">Tap to reload</a></p>
     </div>
+    <div id="root"></div>
+    <noscript>
+      <div class="boot-noscript">Samir Pro Payments needs JavaScript enabled to load. Please enable JavaScript in your browser and reload — or reach us on WhatsApp: <a href="https://wa.me/8801607804964">+880 1607-804964</a></div>
+    </noscript>
+    <script>
+      /* Round 163: retire the branded shell the moment React renders real
+         content into #root (its first commit is empty while Firebase Auth
+         resolves, so an empty root keeps the shell up). If the app never
+         renders, the shell's own links still work and the reload hint
+         below appears — the visitor is never stuck on a blank page. */
+      (function () {
+        var shell = document.getElementById('boot-shell');
+        if (!shell) return;
+        var root = document.getElementById('root');
+        var done = false;
+        function retire() {
+          if (done) return; done = true;
+          shell.classList.add('boot-shell--out');
+          setTimeout(function () { if (shell.isConnected) shell.remove(); }, 240);
+        }
+        if (root && 'MutationObserver' in window) {
+          var mo = new MutationObserver(function () {
+            if (root.children.length > 0) { mo.disconnect(); retire(); }
+          });
+          mo.observe(root, { childList: true });
+          if (root.children.length > 0) { mo.disconnect(); retire(); }
+        }
+        setTimeout(function () {
+          var hint = document.getElementById('boot-slow');
+          if (hint && shell.isConnected && !done) hint.hidden = false;
+        }, 7000);
+      })();
+    </script>
   </body>
 </html>
