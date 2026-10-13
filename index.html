@@ -56,22 +56,34 @@
     }
     </script>
     <script>
-      /* Theme pre-paint: apply the saved Light/Dark choice before first
-         paint so there is no flash. Toggle lives in the profile menu.
-         App-panel sync (2026-10-13): inside the Spro Pay app the panel
-         URL carries ?apptheme=dark|light — the app's theme wins for
-         this load (the saved choice is NOT overwritten). */
+      /* Theme pre-paint: apply the resolved Light/Dark theme before
+         first paint so there is no flash. ONE resolution rule on
+         every surface (Round 171): the Spro Pay app's hint wins
+         inside the app (?apptheme=dark|light on the URL, or the
+         value the native side stashed on the window before boot);
+         a saved 'spro_theme' is an explicit user choice and wins
+         next; with neither, the DEVICE theme decides
+         (prefers-color-scheme). The React side (utils/appTheme)
+         resolves identically and live-follows the device until the
+         user makes an explicit choice. */
       try {
         var appHint = new URLSearchParams(location.search).get('apptheme');
+        if (appHint !== 'dark' && appHint !== 'light') {
+          var stash = window.__SPP_PENDING_APP_THEME;
+          appHint = (stash === 'dark' || stash === 'light') ? stash : null;
+        }
+        var storedTheme = null;
+        try { storedTheme = localStorage.getItem('spro_theme'); } catch (e) { /* storage unavailable */ }
         var wantDark = (appHint === 'dark') ||
-          (appHint !== 'light' && localStorage.getItem('spro_theme') === 'dark');
+          (appHint !== 'light' && (storedTheme === 'dark' ||
+            (storedTheme !== 'light' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)));
         if (wantDark) {
           document.documentElement.setAttribute('data-theme', 'dark');
           document.documentElement.style.colorScheme = 'dark';
           var mc = document.querySelector('meta[name="theme-color"]');
           if (mc) mc.setAttribute('content', '#14092B');
         }
-      } catch (e) { /* storage unavailable — stay light */ }
+      } catch (e) { /* storage unavailable — the React boot resolves the same rule */ }
     </script>
     <script>
       /* Round 169: checkout cold-opens carry a branded pre-paint
@@ -161,7 +173,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
     <noscript><link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" /></noscript>
-    <script type="module" crossorigin src="/assets/index-D0jfoplz.js"></script>
+    <script type="module" crossorigin src="/assets/index-B3_oF14d.js"></script>
     <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-Bh1tDfsg.js">
     <link rel="modulepreload" crossorigin href="/assets/vendor-MoN2eFRA.js">
     <link rel="modulepreload" crossorigin href="/assets/vendor-react-j2YN6wof.js">
