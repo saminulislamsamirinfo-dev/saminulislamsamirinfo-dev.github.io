@@ -71,22 +71,35 @@
           var mc = document.querySelector('meta[name="theme-color"]');
           if (mc) mc.setAttribute('content', '#14092B');
         }
+        /* Round 164: the static first-paint hero in <body> is the
+           HOMEPAGE's face only. Every other route keeps its own
+           pre-existing branded loading exactly as before, so the shell
+           is suppressed there before it can ever paint. */
+        var bsPath = location.pathname.replace(/\/+$/, '') || '/';
+        if (bsPath !== '/' && bsPath !== '/index.html') {
+          document.documentElement.setAttribute('data-bs', 'off');
+        }
       } catch (e) { /* storage unavailable — stay light */ }
     </script>
     <style>
-      /* Round 163 — instant branded shell: a static replica of the site's
-         header + hero skeleton, inlined so it paints the moment this HTML
-         arrives — before a single JS byte downloads. It lives OUTSIDE
-         #root (React's first commit is empty while Firebase Auth
-         resolves, which used to wipe the old in-root splash and leave a
-         blank page on slow links). The inline script after it removes it
-         the moment React renders real content into #root. The shell is
-         purely visual — no loading text, no buttons or pills of its own;
-         the real homepage simply fades in over it. The dark variant keys off
-         the data-theme attribute the pre-paint script above sets. */
-      .boot-shell { position: fixed; inset: 0; z-index: 1500; overflow: hidden; background: radial-gradient(1000px 520px at 88% -10%, rgba(255,122,24,.2), transparent 60%), radial-gradient(900px 520px at -12% 15%, rgba(236,0,140,.16), transparent 55%), linear-gradient(175deg, #FFF7FB 0%, #FDFBFF 52%, #F4EFFF 100%); font-family: Inter, system-ui, -apple-system, sans-serif; transition: opacity .2s ease; }
-      .boot-shell--out { opacity: 0; pointer-events: none; }
-      html[data-theme="dark"] .boot-shell { background: radial-gradient(1000px 520px at 88% -10%, rgba(255,122,24,.14), transparent 60%), radial-gradient(900px 520px at -12% 15%, rgba(236,0,140,.12), transparent 55%), #14092B; }
+      /* Round 164 — instant first paint, HOMEPAGE ONLY: a faithful
+         STATIC REPLICA of the real homepage (header + hero, values
+         copied from Home.jsx / App.css / index.css) inlined so the
+         page that paints the moment this HTML arrives IS the homepage
+         top — the real headline in its settled scheme-0 segment
+         colours, the real copy, the real CTA links. NO skeleton bars,
+         NO placeholder blocks, no loading UI of its own (Samir,
+         2026-10-13: the round-163 shimmer bars must never appear).
+         It lives OUTSIDE #root and the script after it removes it the
+         moment React renders real content (React's first commit is
+         empty while Firebase Auth resolves, which used to leave a
+         blank page on slow links). The head script sets data-bs="off"
+         on every non-home route: there the shell never renders at
+         all, and each route's own pre-existing branded loading
+         appears exactly as before. */
+      .boot-shell { position: fixed; inset: 0; z-index: 1500; overflow: hidden; background: radial-gradient(1000px 520px at 88% -10%, rgba(255,122,24,.2), transparent 60%), radial-gradient(900px 520px at -12% 15%, rgba(236,0,140,.16), transparent 55%), radial-gradient(760px 460px at 55% 115%, rgba(56,189,248,.16), transparent 60%), linear-gradient(175deg, #FFF7FB 0%, #FDFBFF 52%, #F4EFFF 100%); font-family: Inter, system-ui, -apple-system, sans-serif; --bs-ink: #14102E; --bs-slate: #4B4763; }
+      html[data-bs="off"] .boot-shell { display: none !important; }
+      html[data-theme="dark"] .boot-shell { background: radial-gradient(1000px 520px at 88% -10%, rgba(255,122,24,.14), transparent 60%), radial-gradient(900px 520px at -12% 15%, rgba(236,0,140,.18), transparent 55%), radial-gradient(760px 460px at 55% 115%, rgba(56,189,248,.12), transparent 60%), linear-gradient(175deg, #1D0C3A 0%, #150A2E 52%, #120826 100%); --bs-ink: #F4F1FA; --bs-slate: #B9B3D0; }
       .bs-bar { background: rgba(255,255,255,.94); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid rgba(226,232,240,.8); }
       html[data-theme="dark"] .bs-bar { background: rgba(20,9,43,.92); border-bottom-color: rgba(255,255,255,.08); }
       .bs-bar-inner { max-width: 1240px; margin: 0 auto; padding: 12px 20px; display: flex; align-items: center; gap: 16px; }
@@ -102,30 +115,64 @@
       .bs-hero-inner { max-width: 1240px; margin: 0 auto; padding: 92px 20px 84px; display: grid; grid-template-columns: 1.05fr .95fr; gap: 56px; align-items: center; }
       @media (max-width: 980px) { .bs-hero-inner { grid-template-columns: 1fr; padding-top: 64px; } }
       @media (max-width: 640px) { .bs-hero-inner { padding: 54px 16px 50px; gap: 34px; } .bs-bar-inner { padding: 10px 16px; } }
-      .bs-pill { display: inline-flex; align-items: center; background: rgba(236,0,140,.1); color: #C2185B; font-size: 13px; font-weight: 700; padding: 7px 14px; border-radius: 999px; }
-      html[data-theme="dark"] .bs-pill { color: #FF7AC0; }
-      .bs-sk { border-radius: 12px; background: linear-gradient(100deg, rgba(27,16,53,.09) 40%, rgba(27,16,53,.16) 50%, rgba(27,16,53,.09) 60%); background-size: 200% 100%; animation: bsShimmer 1.5s linear infinite; }
-      html[data-theme="dark"] .bs-sk { background: linear-gradient(100deg, rgba(255,255,255,.08) 40%, rgba(255,255,255,.15) 50%, rgba(255,255,255,.08) 60%); background-size: 200% 100%; }
-      @keyframes bsShimmer { to { background-position: -200% 0; } }
-      .bs-h1 { margin: 22px 0 20px; display: flex; flex-direction: column; gap: 12px; }
-      .bs-h1 .bs-sk { height: 56px; }
-      @media (max-width: 640px) { .bs-h1 .bs-sk { height: 38px; } }
-      .bs-lead { display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
-      .bs-lead .bs-sk { height: 15px; border-radius: 8px; }
-      .bs-ctas { display: flex; gap: 14px; flex-wrap: wrap; }
-      .bs-btn { font-size: 16px; font-weight: 800; text-decoration: none; padding: 15px 28px; border-radius: 14px; }
-      .bs-btn--primary { background: linear-gradient(135deg, #EC008C, #FF7A18); color: #fff; box-shadow: 0 14px 30px rgba(236,0,140,.35); }
-      .bs-btn--ghost { background: #fff; color: #C2185B; border: 1px solid rgba(236,0,140,.45); }
-      html[data-theme="dark"] .bs-btn--ghost { background: rgba(255,255,255,.06); color: #FF7AC0; }
-      .bs-points { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 26px; }
-      .bs-points .bs-sk { height: 26px; border-radius: 999px; }
-      .bs-media-card { background: #170B2E; border: 1px solid rgba(27,16,53,.25); border-radius: 20px; overflow: hidden; box-shadow: 0 40px 90px rgba(23,11,46,.4); aspect-ratio: 2048 / 682; display: flex; align-items: center; justify-content: center; }
-      .bs-media-card img { width: 100%; height: 100%; object-fit: contain; mix-blend-mode: screen; display: block; }
-      .bs-media-row { display: flex; gap: 16px; margin-top: 16px; }
-      .bs-media-row .bs-sk { height: 108px; flex: 1; border-radius: 20px; }
+      /* eyebrow — the real .eyebrow--dark gradient pill + .hero-pill sizing */
+      .bs-eyebrow { display: inline-flex; align-items: center; gap: 6px; padding: 6px 13px; border-radius: 999px; background: linear-gradient(92deg, #EC008C, #FF7A18); color: #fff; box-shadow: 0 8px 20px rgba(236,0,140,.3); font-size: 12px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; white-space: nowrap; max-width: 94vw; }
+      .bs-eyebrow svg { width: 13px; height: 13px; flex: none; }
+      @media (max-width: 400px) { .bs-eyebrow { font-size: 10.5px; letter-spacing: .6px; padding: 6px 10px; } }
+      /* headline — .h-display over the settled scheme-0 segment palette */
+      .bs-h1 { font-size: clamp(38px, 5.4vw, 60px); font-weight: 900; letter-spacing: -1.6px; line-height: 1.06; color: var(--bs-ink); margin: 22px 0 20px; }
+      .bs-rh { display: block; min-height: 4.24em; }
+      @media (max-width: 980px) { .bs-rh { min-height: 2.12em; } }
+      @media (max-width: 640px) { .bs-h1 { font-size: clamp(29px, 8.8vw, 38px); letter-spacing: -1px; line-height: 1.12; } .bs-rh { min-height: 3.36em; } }
+      @media (max-width: 380px) { .bs-h1 { font-size: 27px; } }
+      .bs-w { display: inline-block; white-space: nowrap; }
+      .bs-seg0 { background-image: linear-gradient(92deg, #2563EB 5%, #0284C7 95%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+      .bs-seg1 { background-image: linear-gradient(92deg, #EC008C 5%, #FF2E93 42%, #FF7A18 78%, #FFB800 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+      .bs-seg2 { background-image: linear-gradient(92deg, #8B5CF6 5%, #EC008C 95%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+      .bs-seg3 { color: #EC008C; }
+      html[data-theme="dark"] .bs-seg0 { background-image: linear-gradient(92deg, #60A5FA 5%, #38BDF8 95%); }
+      html[data-theme="dark"] .bs-seg2 { background-image: linear-gradient(92deg, #C084FC 5%, #F472B6 95%); }
+      html[data-theme="dark"] .bs-seg3 { color: #F472B6; }
+      /* lead paragraph */
+      .bs-lead { font-size: 18px; line-height: 1.7; color: var(--bs-slate); margin: 0; }
+      .bs-lead strong { color: var(--bs-ink); }
+      @media (max-width: 640px) { .bs-lead { font-size: 16.5px; line-height: 1.6; } }
+      /* CTAs — .hero-ctas grid + .btnx--lg sizing, brand gradients */
+      .bs-ctas { display: grid; grid-template-columns: auto auto; justify-content: start; gap: 14px; margin-top: 36px; }
+      .bs-ctas > :nth-child(3) { grid-column: 1 / -1; justify-self: center; }
+      @media (max-width: 640px) { .bs-ctas { grid-template-columns: 1fr; } .bs-ctas > :nth-child(3) { grid-column: auto; justify-self: stretch; } }
+      .bs-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 17px 36px; border-radius: 14px; font-size: 17px; font-weight: 700; text-decoration: none; border: 1px solid transparent; white-space: nowrap; }
+      .bs-btn svg { flex: none; }
+      .bs-btn--primary { background: linear-gradient(135deg, #EC008C, #FF2E93 48%, #FF7A18); color: #fff; box-shadow: 0 12px 26px rgba(236,0,140,.32); }
+      .bs-btn--demo { background: #fff; color: #C2185B; border-color: rgba(236,0,140,.45); box-shadow: 0 4px 14px rgba(27,16,53,.06); }
+      .bs-btn--blue { background: linear-gradient(135deg, #2563EB, #38BDF8); color: #fff; box-shadow: 0 12px 26px rgba(37,99,235,.3); }
+      /* trust points */
+      .bs-points { display: flex; flex-wrap: wrap; gap: 12px 26px; margin-top: 28px; }
+      .bs-point { display: inline-flex; align-items: center; gap: 9px; font-size: 14px; font-weight: 600; color: var(--bs-slate); }
+      .bs-point-badge { flex: none; width: 26px; height: 26px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; background: linear-gradient(135deg, rgba(236,0,140,.12), rgba(255,122,24,.14)); border: 1.5px solid rgba(236,0,140,.35); box-shadow: 0 2px 8px rgba(236,0,140,.16); }
+      .bs-point-badge svg { width: 15px; height: 15px; display: block; }
+      /* right column — logo card, phone + film frames, badges */
+      .bs-logo-card { background: linear-gradient(160deg, #FFFFFF, #FFF5FA 75%); border: 1px solid rgba(27,16,53,.09); border-radius: 20px; padding: 20px 24px; margin-bottom: 18px; box-shadow: 0 30px 60px rgba(23,11,46,.18); }
+      .bs-logo-media { position: relative; width: 100%; aspect-ratio: 2048 / 682; border-radius: 14px; overflow: hidden; background: #170B2E; display: flex; align-items: center; justify-content: center; }
+      .bs-logo-media img { width: 100%; height: 100%; object-fit: contain; mix-blend-mode: screen; display: block; }
+      .bs-media-row { display: flex; gap: 18px; align-items: flex-start; }
+      .bs-phone { position: relative; flex: none; width: 218px; aspect-ratio: 9 / 19.2; border-radius: 34px; padding: 7px; background: linear-gradient(165deg, #33205C, #0B0618); border: 1px solid rgba(255,255,255,.22); box-shadow: 0 34px 70px rgba(23,11,46,.45), 0 0 0 6px rgba(27,16,53,.08); }
+      .bs-phone::before { content: ''; position: absolute; top: 15px; left: 50%; transform: translateX(-50%); width: 64px; height: 15px; border-radius: 99px; background: rgba(0,0,0,.85); z-index: 3; }
+      .bs-phone-in { width: 100%; height: 100%; border-radius: 28px; background: #170B2E url('/logo-round.png') center / cover no-repeat; }
+      .bs-frames { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 18px; align-self: stretch; }
+      .bs-frame { background: #170B2E; border: 1px solid rgba(27,16,53,.25); border-radius: 20px; overflow: hidden; box-shadow: 0 40px 90px rgba(23,11,46,.4); display: flex; flex-direction: column; flex: 1 1 0; }
+      .bs-mbar { display: flex; align-items: center; gap: 6px; padding: 11px 14px; background: rgba(255,255,255,.03); border-bottom: 1px solid rgba(255,255,255,.08); }
+      .bs-mbar i { width: 10px; height: 10px; border-radius: 50%; display: block; flex: none; }
+      .bs-mbar .cap { margin-left: 8px; font-size: 11px; letter-spacing: .1px; color: #A79FC4; background: rgba(255,255,255,.06); padding: 4px 10px; border-radius: 7px; flex: 1; min-width: 0; text-align: center; white-space: nowrap; overflow: hidden; }
+      .bs-fbody { flex: 1 1 auto; min-height: 120px; }
+      .bs-fbody--intro { background: radial-gradient(600px 300px at 50% 0%, rgba(236,0,140,.22), transparent 65%), #170B2E; }
+      .bs-fbody--film { background: radial-gradient(600px 300px at 50% 0%, rgba(255,122,24,.2), transparent 65%), #170B2E; }
+      @media (max-width: 1150px) { .bs-media-row { flex-direction: column; align-items: center; } .bs-frames { width: 100%; align-self: auto; } .bs-frame { flex: none; width: 100%; } .bs-fbody { aspect-ratio: 16 / 9; flex: none; min-height: 0; } }
+      @media (max-width: 640px) { .bs-phone { width: min(290px, 80vw); } }
+      .bs-badges { display: flex; gap: 10px; justify-content: center; margin-top: 16px; flex-wrap: wrap; }
+      .bs-badge { background: #fff; color: #4B4763; border: 1px solid #EFE3F2; padding: 7px 14px; box-shadow: 0 4px 14px rgba(27,16,53,.06); border-radius: 999px; font-size: 12px; font-weight: 700; }
       .boot-noscript { position: fixed; inset: auto 16px 16px; z-index: 1600; background: #170B2E; color: #fff; font-family: Inter, system-ui, sans-serif; font-size: 15px; line-height: 1.55; padding: 18px 20px; border-radius: 16px; }
       .boot-noscript a { color: #FFB37A; font-weight: 700; }
-      @media (prefers-reduced-motion: reduce) { .bs-sk { animation: none; } }
     </style>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -138,19 +185,22 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
     <noscript><link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" /></noscript>
-    <script type="module" crossorigin src="/assets/index-ujGVjGT8.js"></script>
+    <script type="module" crossorigin src="/assets/index-C-6VEAWh.js"></script>
     <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-Bh1tDfsg.js">
     <link rel="modulepreload" crossorigin href="/assets/vendor-MoN2eFRA.js">
     <link rel="modulepreload" crossorigin href="/assets/vendor-react-j2YN6wof.js">
     <link rel="modulepreload" crossorigin href="/assets/vendor-firebase-eBC431UV.js">
-    <link rel="modulepreload" crossorigin href="/assets/vendor-icons-BbJIpSrc.js">
+    <link rel="modulepreload" crossorigin href="/assets/vendor-icons-CsOzUjvI.js">
     <link rel="stylesheet" crossorigin href="/assets/vendor-qcT314-W.css">
-    <link rel="stylesheet" crossorigin href="/assets/index-BlFHc475.css">
+    <link rel="stylesheet" crossorigin href="/assets/index-BLgCkPYz.css">
   </head>
   <body>
-    <!-- Round 163: instant branded shell (styles in <head>). Painted from
-         the raw HTML, removed by the script below when React renders. -->
+    <!-- Round 164: static replica of the real homepage top (styles in
+         <head>). Painted from the raw HTML on the homepage path only;
+         removed by the script below when React renders, and removed
+         immediately on every other route (data-bs="off"). -->
     <div class="boot-shell" id="boot-shell" aria-hidden="true">
+      <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="bsCheckGrad" x1="4" y1="20" x2="20" y2="4" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#EC008C" /><stop offset="1" stop-color="#FF7A18" /></linearGradient></defs></svg>
       <header class="bs-bar">
         <div class="bs-bar-inner">
           <a class="bs-logo" href="/" aria-label="Samir Pro Payments — home">
@@ -168,29 +218,33 @@
       </header>
       <div class="bs-hero-inner">
         <div>
-          <span class="bs-pill">Payment Automation for Bangladesh</span>
-          <div class="bs-h1">
-            <span class="bs-sk" style="width:96%"></span>
-            <span class="bs-sk" style="width:84%"></span>
-            <span class="bs-sk" style="width:58%"></span>
-          </div>
-          <div class="bs-lead">
-            <span class="bs-sk" style="width:100%"></span>
-            <span class="bs-sk" style="width:74%"></span>
-          </div>
+          <span class="bs-eyebrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z" /></svg>Payment Automation for Bangladesh</span>
+          <h1 class="bs-h1"><span class="bs-rh"><span class="bs-w bs-seg0">Payments</span> <span class="bs-w bs-seg0">to</span> <span class="bs-w bs-seg1">your</span> <span class="bs-w bs-seg1">Own</span> <span class="bs-w bs-seg1">Number,</span> <span class="bs-w bs-seg2">Verified</span> <span class="bs-w bs-seg3">Automatically.</span></span></h1>
+          <p class="bs-lead">Customers pay your personal bKash, NAGAD, Rocket or Upay number — SamirProPayments confirms every payment in seconds with <strong>0% transaction fees</strong>. No merchant account. No manual TrxID checking. No waiting.</p>
           <div class="bs-ctas">
-            <a class="bs-btn bs-btn--primary" href="/register">Get Started for Free</a>
-            <a class="bs-btn bs-btn--ghost" href="/demo">Live Demo - Sandbox</a>
+            <a class="bs-btn bs-btn--primary" href="/register">Get Started for Free <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6" /></svg></a>
+            <a class="bs-btn bs-btn--demo" href="/demo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" /><path d="M20 3v4" /><path d="M22 5h-4" /></svg> Live Demo - Sandbox</a>
+            <a class="bs-btn bs-btn--blue" href="/checkout?orderId=INV-10000000&amp;amount=10&amp;merchant=SamirProPayments"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3" /></svg> Try Live Checkout</a>
           </div>
           <div class="bs-points">
-            <span class="bs-sk" style="width:150px"></span>
-            <span class="bs-sk" style="width:170px"></span>
-            <span class="bs-sk" style="width:140px"></span>
+            <span class="bs-point"><span class="bs-point-badge"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5.6 12.8l4.1 4.1L18.4 7.6" stroke="url(#bsCheckGrad)" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" /></svg></span>0% per-transaction fee</span>
+            <span class="bs-point"><span class="bs-point-badge"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5.6 12.8l4.1 4.1L18.4 7.6" stroke="url(#bsCheckGrad)" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" /></svg></span>Money never touches us</span>
+            <span class="bs-point"><span class="bs-point-badge"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5.6 12.8l4.1 4.1L18.4 7.6" stroke="url(#bsCheckGrad)" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" /></svg></span>No documents needed</span>
+            <span class="bs-point"><span class="bs-point-badge"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5.6 12.8l4.1 4.1L18.4 7.6" stroke="url(#bsCheckGrad)" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" /></svg></span>Auto-Verified in Seconds</span>
+            <span class="bs-point"><span class="bs-point-badge"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5.6 12.8l4.1 4.1L18.4 7.6" stroke="url(#bsCheckGrad)" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" /></svg></span>Works With Personal Numbers</span>
+            <span class="bs-point"><span class="bs-point-badge"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5.6 12.8l4.1 4.1L18.4 7.6" stroke="url(#bsCheckGrad)" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" /></svg></span>Instant PDF Invoice &amp; Receipt</span>
           </div>
         </div>
         <div>
-          <div class="bs-media-card"><img src="/logo-wide.png" alt="" width="2048" height="682" /></div>
-          <div class="bs-media-row"><span class="bs-sk"></span><span class="bs-sk"></span></div>
+          <div class="bs-logo-card"><div class="bs-logo-media"><img src="/logo-wide.png" alt="" width="2048" height="682" /></div></div>
+          <div class="bs-media-row">
+            <div class="bs-phone"><div class="bs-phone-in"></div></div>
+            <div class="bs-frames">
+              <div class="bs-frame"><div class="bs-mbar"><i style="background:#FF5F56"></i><i style="background:#FFBD2E"></i><i style="background:#27C93F"></i><span class="cap">samirpropayments — intro</span></div><div class="bs-fbody bs-fbody--intro"></div></div>
+              <div class="bs-frame"><div class="bs-mbar"><i style="background:#FF5F56"></i><i style="background:#FFBD2E"></i><i style="background:#27C93F"></i><span class="cap">samirpropayments — gateway film</span></div><div class="bs-fbody bs-fbody--film"></div></div>
+            </div>
+          </div>
+          <div class="bs-badges"><span class="bs-badge">Auto-verify &lt; 30s</span><span class="bs-badge">Anti-spoof protection</span><span class="bs-badge">Instant webhooks</span></div>
         </div>
       </div>
     </div>
@@ -199,26 +253,32 @@
       <div class="boot-noscript">Samir Pro Payments needs JavaScript enabled to load. Please enable JavaScript in your browser and reload — or reach us on WhatsApp: <a href="https://wa.me/8801607804964">+880 1607-804964</a></div>
     </noscript>
     <script>
-      /* Round 163: retire the branded shell the moment React renders real
-         content into #root (its first commit is empty while Firebase Auth
-         resolves, so an empty root keeps the shell up). The shell carries
-         no UI of its own — when the app renders, it fades out over it. */
+      /* Round 164: on non-home routes (data-bs="off", set pre-paint in
+         <head>) the shell node is dropped at once — those routes keep
+         their own branded loading untouched. On the homepage, the
+         replica is removed SYNCHRONOUSLY the moment React renders real
+         content into #root: the MutationObserver callback runs as a
+         microtask, before the next paint, so no frame ever shows the
+         replica and the app together (the round-163 crossfade let the
+         two headers overlap — atomic removal replaces it). */
       (function () {
         var shell = document.getElementById('boot-shell');
         if (!shell) return;
+        if (document.documentElement.getAttribute('data-bs') === 'off') { shell.remove(); return; }
         var root = document.getElementById('root');
         var done = false;
+        var mo = null;
         function retire() {
           if (done) return; done = true;
-          shell.classList.add('boot-shell--out');
-          setTimeout(function () { if (shell.isConnected) shell.remove(); }, 240);
+          if (mo) mo.disconnect();
+          if (shell.isConnected) shell.remove();
         }
         if (root && 'MutationObserver' in window) {
-          var mo = new MutationObserver(function () {
-            if (root.children.length > 0) { mo.disconnect(); retire(); }
+          mo = new MutationObserver(function () {
+            if (root.children.length > 0) retire();
           });
           mo.observe(root, { childList: true });
-          if (root.children.length > 0) { mo.disconnect(); retire(); }
+          if (root.children.length > 0) retire();
         }
       })();
     </script>
