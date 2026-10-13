@@ -100,21 +100,44 @@
       .boot-shell { position: fixed; inset: 0; z-index: 1500; overflow: hidden; background: radial-gradient(1000px 520px at 88% -10%, rgba(255,122,24,.2), transparent 60%), radial-gradient(900px 520px at -12% 15%, rgba(236,0,140,.16), transparent 55%), radial-gradient(760px 460px at 55% 115%, rgba(56,189,248,.16), transparent 60%), linear-gradient(175deg, #FFF7FB 0%, #FDFBFF 52%, #F4EFFF 100%); font-family: Inter, system-ui, -apple-system, sans-serif; --bs-ink: #14102E; --bs-slate: #4B4763; }
       html[data-bs="off"] .boot-shell { display: none !important; }
       html[data-theme="dark"] .boot-shell { background: radial-gradient(1000px 520px at 88% -10%, rgba(255,122,24,.14), transparent 60%), radial-gradient(900px 520px at -12% 15%, rgba(236,0,140,.18), transparent 55%), radial-gradient(760px 460px at 55% 115%, rgba(56,189,248,.12), transparent 60%), linear-gradient(175deg, #1D0C3A 0%, #150A2E 52%, #120826 100%); --bs-ink: #F4F1FA; --bs-slate: #B9B3D0; }
-      .bs-bar { background: rgba(255,255,255,.94); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid rgba(226,232,240,.8); }
-      html[data-theme="dark"] .bs-bar { background: rgba(20,9,43,.92); border-bottom-color: rgba(255,255,255,.08); }
-      .bs-bar-inner { max-width: 1240px; margin: 0 auto; padding: 12px 20px; display: flex; align-items: center; gap: 16px; }
-      .bs-logo { display: flex; align-items: center; text-decoration: none; background: linear-gradient(135deg, #1B1035, #251545); border-radius: 12px; padding: 6px 12px; box-shadow: 0 10px 24px rgba(27,16,53,.22), inset 0 0 0 1px rgba(255,255,255,.07); }
-      html[data-theme="dark"] .bs-logo { background: transparent; box-shadow: none; padding-left: 0; }
-      .bs-logo img { height: 46px; width: auto; max-width: 46vw; object-fit: contain; display: block; mix-blend-mode: screen; }
-      .bs-nav { display: none; margin: 0 auto; gap: 28px; }
-      .bs-nav a { color: #4B4763; font-size: 15px; font-weight: 600; text-decoration: none; }
+      /* Round 153 fix: the shell bar is a PIXEL-FAITHFUL replica of the
+         real .navbar (values copied from App.css .navbar / .navbar-inner
+         / .logo-banner / .nav-links / .theme-btn / .profile-btn) — the
+         old bar (logo + "Get Started" pill, 79px, no burger/icons) made
+         every homepage load visibly morph into the real header: pill
+         vanished, logo jumped right, height changed. Now the atomic
+         swap changes nothing in the top row at any width or theme. */
+      .bs-bar { background: #FFFFFF; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid rgba(226,232,240,.8); }
+      html[data-theme="dark"] .bs-bar { background: #14092B; border-bottom-color: rgba(255,255,255,.08); }
+      .bs-bar-inner { max-width: 1240px; margin: 0 auto; padding: 12px 20px; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 16px; }
+      @media (max-width: 1080px) { .bs-bar-inner { padding: 9px 14px; gap: 10px; } }
+      .bs-left { display: flex; align-items: center; gap: 6px; min-width: 0; }
+      .bs-burger { display: none; width: 44px; height: 44px; min-width: 44px; flex: none; align-items: center; justify-content: center; color: var(--bs-ink); }
+      @media (max-width: 1080px) { .bs-burger { display: flex; } }
+      .bs-logo { display: flex; align-items: center; text-decoration: none; min-width: 0; background: linear-gradient(135deg, #1B1035, #251545); border-radius: 12px; padding: 7px 14px; box-shadow: 0 10px 24px rgba(27,16,53,.22), inset 0 0 0 1px rgba(255,255,255,.07); }
+      html[data-theme="dark"] .bs-logo { background: transparent; box-shadow: none; }
+      .bs-logo img { height: 54px; width: auto; max-width: 46vw; object-fit: contain; display: block; mix-blend-mode: screen; }
+      @media (min-width: 1081px) and (max-width: 1280px) { .bs-logo img { height: 51px; } }
+      @media (max-width: 1080px) { .bs-logo img { height: 50px; } }
+      @media (max-width: 400px) { .bs-logo { padding: 6px 10px; } .bs-logo img { height: 50px; } }
+      @media (max-width: 370px) { .bs-logo { padding: 6px 8px; } .bs-logo img { height: 46px; } }
+      .bs-nav { display: flex; align-items: center; justify-content: center; gap: 6px; min-width: 0; }
+      .bs-nav a { padding: 9px 14px; border-radius: 10px; color: #4B4763; font-size: 15px; font-weight: 600; text-decoration: none; white-space: nowrap; }
       html[data-theme="dark"] .bs-nav a { color: #B9B3D0; }
-      @media (min-width: 961px) { .bs-nav { display: flex; } }
-      .bs-cta { margin-left: auto; background: linear-gradient(135deg, #EC008C, #FF7A18); color: #fff; font-size: 15px; font-weight: 800; text-decoration: none; padding: 12px 22px; border-radius: 14px; box-shadow: 0 10px 24px rgba(236,0,140,.3); white-space: nowrap; }
-      @media (min-width: 961px) { .bs-cta { margin-left: 0; } }
+      .bs-nav a.bs-nav-active { color: #C2185B; background: rgba(236,0,140,.09); }
+      html[data-theme="dark"] .bs-nav a.bs-nav-active { color: #F472B6; }
+      .bs-nav a.bs-nav-hot { color: #C2185B; font-weight: 700; }
+      html[data-theme="dark"] .bs-nav a.bs-nav-hot { color: #F472B6; }
+      @media (min-width: 1081px) and (max-width: 1280px) { .bs-nav a { padding: 8px 10px; font-size: 14px; } }
+      @media (max-width: 1080px) { .bs-nav { display: none; } }
+      .bs-actions { display: flex; align-items: center; gap: 10px; }
+      .bs-icbtn { width: 44px; height: 44px; min-width: 44px; flex: none; display: flex; align-items: center; justify-content: center; color: var(--bs-ink); }
+      .bs-ic-sun { display: none; }
+      html[data-theme="dark"] .bs-ic-sun { display: block; }
+      html[data-theme="dark"] .bs-ic-moon { display: none; }
       .bs-hero-inner { max-width: 1240px; margin: 0 auto; padding: 92px 20px 84px; display: grid; grid-template-columns: 1.05fr .95fr; gap: 56px; align-items: center; }
       @media (max-width: 980px) { .bs-hero-inner { grid-template-columns: 1fr; padding-top: 64px; } }
-      @media (max-width: 640px) { .bs-hero-inner { padding: 54px 16px 50px; gap: 34px; } .bs-bar-inner { padding: 10px 16px; } }
+      @media (max-width: 640px) { .bs-hero-inner { padding: 54px 16px 50px; gap: 34px; } }
       /* eyebrow — the real .eyebrow--dark gradient pill + .hero-pill sizing */
       .bs-eyebrow { display: inline-flex; align-items: center; gap: 6px; padding: 6px 13px; border-radius: 999px; background: linear-gradient(92deg, #EC008C, #FF7A18); color: #fff; box-shadow: 0 8px 20px rgba(236,0,140,.3); font-size: 12px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; white-space: nowrap; max-width: 94vw; }
       .bs-eyebrow svg { width: 13px; height: 13px; flex: none; }
@@ -185,14 +208,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
     <noscript><link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" /></noscript>
-    <script type="module" crossorigin src="/assets/index-C2eA9UMn.js"></script>
+    <script type="module" crossorigin src="/assets/index-BUSoRmLM.js"></script>
     <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-Bh1tDfsg.js">
     <link rel="modulepreload" crossorigin href="/assets/vendor-MoN2eFRA.js">
     <link rel="modulepreload" crossorigin href="/assets/vendor-react-j2YN6wof.js">
     <link rel="modulepreload" crossorigin href="/assets/vendor-firebase-eBC431UV.js">
     <link rel="modulepreload" crossorigin href="/assets/vendor-icons-CsOzUjvI.js">
     <link rel="stylesheet" crossorigin href="/assets/vendor-qcT314-W.css">
-    <link rel="stylesheet" crossorigin href="/assets/index-Cwsh_8w7.css">
+    <link rel="stylesheet" crossorigin href="/assets/index-CrCppEaT.css">
   </head>
   <body>
     <!-- Round 164: static replica of the real homepage top (styles in
@@ -203,17 +226,28 @@
       <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="bsCheckGrad" x1="4" y1="20" x2="20" y2="4" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#EC008C" /><stop offset="1" stop-color="#FF7A18" /></linearGradient></defs></svg>
       <header class="bs-bar">
         <div class="bs-bar-inner">
-          <a class="bs-logo" href="/" aria-label="Samir Pro Payments — home">
-            <img src="/logo-wide.png" alt="Samir Pro Payments" width="2048" height="682" fetchpriority="high" />
-          </a>
+          <div class="bs-left">
+            <span class="bs-burger"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="18" y2="18"/></svg></span>
+            <a class="bs-logo" href="/" aria-label="Samir Pro Payments — home">
+              <img src="/logo-wide.png" alt="Samir Pro Payments" width="2048" height="682" fetchpriority="high" />
+            </a>
+          </div>
           <nav class="bs-nav">
+            <a href="/" class="bs-nav-active">Home</a>
             <a href="/features">Features</a>
             <a href="/pricing">Pricing</a>
-            <a href="/demo">Live Demo</a>
             <a href="/docs">Docs</a>
+            <a href="/integration">Integration</a>
             <a href="/about">About</a>
+            <a href="/blog">Blog</a>
+            <a href="/events">Events</a>
+            <a href="/releases">Releases</a>
+            <a href="/demo" class="bs-nav-hot">Live Demo</a>
           </nav>
-          <a class="bs-cta" href="/register">Get Started</a>
+          <div class="bs-actions">
+            <span class="bs-icbtn"><svg class="bs-ic-moon" width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg><svg class="bs-ic-sun" width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg></span>
+            <span class="bs-icbtn"><svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="10" r="3.2"/><path d="M5.6 19.4a7.6 7.6 0 0 1 12.8 0"/></svg></span>
+          </div>
         </div>
       </header>
       <div class="bs-hero-inner">
