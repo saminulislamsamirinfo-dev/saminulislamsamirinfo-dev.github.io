@@ -53,9 +53,15 @@
     </script>
     <script>
       /* Theme pre-paint: apply the saved Light/Dark choice before first
-         paint so there is no flash. Toggle lives in the profile menu. */
+         paint so there is no flash. Toggle lives in the profile menu.
+         App-panel sync (2026-10-13): inside the Spro Pay app the panel
+         URL carries ?apptheme=dark|light — the app's theme wins for
+         this load (the saved choice is NOT overwritten). */
       try {
-        if (localStorage.getItem('spro_theme') === 'dark') {
+        var appHint = new URLSearchParams(location.search).get('apptheme');
+        var wantDark = (appHint === 'dark') ||
+          (appHint !== 'light' && localStorage.getItem('spro_theme') === 'dark');
+        if (wantDark) {
           document.documentElement.setAttribute('data-theme', 'dark');
           document.documentElement.style.colorScheme = 'dark';
           var mc = document.querySelector('meta[name="theme-color"]');
@@ -82,14 +88,14 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Hind+Siliguri:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-    <script type="module" crossorigin src="/assets/index-DyBs1-9H.js"></script>
+    <script type="module" crossorigin src="/assets/index-bTIGQ10y.js"></script>
     <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-Bh1tDfsg.js">
     <link rel="modulepreload" crossorigin href="/assets/vendor-MoN2eFRA.js">
     <link rel="modulepreload" crossorigin href="/assets/vendor-react-j2YN6wof.js">
     <link rel="modulepreload" crossorigin href="/assets/vendor-firebase-eBC431UV.js">
     <link rel="modulepreload" crossorigin href="/assets/vendor-icons-Dx44akyu.js">
     <link rel="stylesheet" crossorigin href="/assets/vendor-qcT314-W.css">
-    <link rel="stylesheet" crossorigin href="/assets/index-BRZ1jd96.css">
+    <link rel="stylesheet" crossorigin href="/assets/index-C-81VXT8.css">
   </head>
   <body>
     <div id="root">
