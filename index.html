@@ -3,26 +3,29 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SamirProPayments — Payments to Your Own Number, Verified Automatically</title>
+    <title>Samir Pro Payments — Payments to Your Own Number, Verified Automatically</title>
     <meta name="description" content="Accept bKash, NAGAD, Rocket, Upay, UPI & Binance payments to your own number — auto-verified in seconds, 0% transaction fees, no merchant account needed. Secure · Fast · Flexible." />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://samirpropayments.online/" />
     <meta name="theme-color" content="#170B2E" />
-    <link rel="icon" type="image/png" href="/logo-circular.png" />
-    <link rel="apple-touch-icon" href="/logo-circular.png" />
+    <meta name="application-name" content="Samir Pro Payments" />
+    <meta name="apple-mobile-web-app-title" content="Samir Pro Payments" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/logo-circular-t.png" />
+    <link rel="shortcut icon" type="image/png" href="/logo-circular-t.png" />
+    <link rel="apple-touch-icon" href="/logo-circular-t.png" />
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="SamirProPayments" />
-    <meta property="og:title" content="SamirProPayments — Payments to Your Own Number, Verified Automatically" />
+    <meta property="og:site_name" content="Samir Pro Payments" />
+    <meta property="og:title" content="Samir Pro Payments — Payments to Your Own Number, Verified Automatically" />
     <meta property="og:description" content="Accept bKash, NAGAD, Rocket, Upay, UPI & Binance payments to your own number — auto-verified in seconds, 0% transaction fees, no merchant account needed. Secure · Fast · Flexible." />
     <meta property="og:url" content="https://samirpropayments.online/" />
     <meta property="og:image" content="https://samirpropayments.online/og-image.jpg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="SamirProPayments — Payments to Your Own Number, Verified Automatically" />
+    <meta property="og:image:alt" content="Samir Pro Payments — Payments to Your Own Number, Verified Automatically" />
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="SamirProPayments — Payments to Your Own Number, Verified Automatically" />
+    <meta name="twitter:title" content="Samir Pro Payments — Payments to Your Own Number, Verified Automatically" />
     <meta name="twitter:description" content="Accept bKash, NAGAD, Rocket, Upay, UPI & Binance payments to your own number — auto-verified in seconds, 0% transaction fees, no merchant account needed. Secure · Fast · Flexible." />
     <meta name="twitter:image" content="https://samirpropayments.online/og-image.jpg" />
     <!-- Structured data -->
@@ -32,9 +35,10 @@
       "@graph": [
         {
           "@type": "Organization",
-          "name": "SamirProPayments",
+          "name": "Samir Pro Payments",
+          "alternateName": "SamirProPayments",
           "url": "https://samirpropayments.online/",
-          "logo": "https://samirpropayments.online/logo-circular.png",
+          "logo": "https://samirpropayments.online/logo-circular-t.png",
           "slogan": "Secure · Fast · Flexible",
           "email": "samirpropayment@gmail.com",
           "parentOrganization": {
@@ -44,58 +48,211 @@
         },
         {
           "@type": "WebSite",
-          "name": "SamirProPayments",
+          "name": "Samir Pro Payments",
+          "alternateName": "SamirProPayments",
           "url": "https://samirpropayments.online/"
         }
       ]
     }
     </script>
     <script>
-      /* Theme pre-paint: apply the saved Light/Dark choice before first
-         paint so there is no flash. Toggle lives in the profile menu. */
+      /* Theme pre-paint: apply the resolved Light/Dark theme before
+         first paint so there is no flash. ONE resolution rule on
+         every surface (Round 171): the Spro Pay app's hint wins
+         inside the app (?apptheme=dark|light on the URL, or the
+         value the native side stashed on the window before boot);
+         a saved 'spro_theme' is an explicit user choice and wins
+         next; with neither, the DEVICE theme decides
+         (prefers-color-scheme). The React side (utils/appTheme)
+         resolves identically and live-follows the device until the
+         user makes an explicit choice. */
       try {
-        if (localStorage.getItem('spro_theme') === 'dark') {
+        var appHint = new URLSearchParams(location.search).get('apptheme');
+        if (appHint !== 'dark' && appHint !== 'light') {
+          var stash = window.__SPP_PENDING_APP_THEME;
+          appHint = (stash === 'dark' || stash === 'light') ? stash : null;
+        }
+        var storedTheme = null;
+        try { storedTheme = localStorage.getItem('spro_theme'); } catch (e) { /* storage unavailable */ }
+        var wantDark = (appHint === 'dark') ||
+          (appHint !== 'light' && (storedTheme === 'dark' ||
+            (storedTheme !== 'light' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)));
+        if (wantDark) {
           document.documentElement.setAttribute('data-theme', 'dark');
           document.documentElement.style.colorScheme = 'dark';
           var mc = document.querySelector('meta[name="theme-color"]');
           if (mc) mc.setAttribute('content', '#14092B');
         }
-      } catch (e) { /* storage unavailable — stay light */ }
+      } catch (e) { /* storage unavailable — the React boot resolves the same rule */ }
+    </script>
+    <script>
+      /* Round 169: checkout cold-opens carry a branded pre-paint
+         loader (Samir's explicit order — the "Opening Spro Payments"
+         element below), so flag the route before first paint. ONLY
+         /checkout paths are flagged; every other route stays exactly
+         as Round 154 left it — no shell, no replica, nothing visual. */
+      try {
+        var bsPath = location.pathname;
+        if (bsPath === '/checkout' || bsPath.indexOf('/checkout/') === 0) {
+          document.documentElement.setAttribute('data-bs', 'checkout');
+        }
+      } catch (e) { /* no-op */ }
     </script>
     <style>
-      /* Round 106 — boot splash: one calm branded state from the very
-         first paint until React mounts and replaces #root's content,
-         so a cold open never shows a blank page (or, later, a skeleton
-         flash). Pure CSS + text — no image loads before the app. The
-         dark variant keys off the data-theme attribute the pre-paint
-         script above sets. */
-      .boot-splash { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; background: #FDF9FC; }
-      html[data-theme="dark"] .boot-splash { background: #14092B; }
-      .boot-ring { width: 46px; height: 46px; border-radius: 50%; border: 3px solid rgba(236,0,140,.16); border-top-color: #EC008C; border-right-color: #FF7A18; animation: bootSpin .8s linear infinite; }
-      .boot-word { font-family: Inter, system-ui, -apple-system, sans-serif; font-size: 20px; font-weight: 800; letter-spacing: -.01em; color: #1B1035; }
-      .boot-word em { font-style: normal; color: #EC008C; }
-      html[data-theme="dark"] .boot-word { color: #FFFFFF; }
-      @keyframes bootSpin { to { transform: rotate(360deg) } }
-      @media (prefers-reduced-motion: reduce) { .boot-ring { animation: none; } }
+      /* Round 154: the static first-paint replica (Rounds 163/164)
+         is GONE — Samir's order: no loading replica of any kind.
+         First paint is the real app; the only inline styles left
+         are for the <noscript> notice, which renders solely when
+         JavaScript is disabled. */
+      .boot-noscript { position: fixed; inset: auto 16px 16px; z-index: 1600; background: #170B2E; color: #fff; font-family: Inter, system-ui, sans-serif; font-size: 15px; line-height: 1.55; padding: 18px 20px; border-radius: 16px; }
+      .boot-noscript a { color: #FFB37A; font-weight: 700; }
+    </style>
+    <style>
+      /* Round 169 — /checkout pre-paint loader: a CSS-only mirror of
+               the app-open BrandLoader (halo, spinning gradient ring,
+               dashed ring, floating logo with shine sweep, gold title,
+               progress track) so a customer opening a checkout link never
+               stares at a white page (Samir, 2026-10-13). Fully
+               self-contained: it must paint before any bundle CSS/JS
+               arrives. Shown ONLY on checkout paths (data-bs="checkout",
+               set pre-paint above); removed atomically on app mount by
+               the same retire script as the homepage shell. */
+            .co-shell { display: none; position: fixed; inset: 0; z-index: 1500; overflow: hidden; align-items: center; justify-content: center; background: radial-gradient(1000px 520px at 88% -10%, rgba(255,122,24,.2), transparent 60%), radial-gradient(900px 520px at -12% 15%, rgba(236,0,140,.16), transparent 55%), radial-gradient(760px 460px at 55% 115%, rgba(56,189,248,.16), transparent 60%), linear-gradient(175deg, #FFF7FB 0%, #FDFBFF 52%, #F4EFFF 100%); font-family: Poppins, Inter, system-ui, -apple-system, sans-serif; }
+            html[data-bs="checkout"] .co-shell { display: flex; }
+            html[data-theme="dark"] .co-shell { background: radial-gradient(1000px 520px at 88% -10%, rgba(255,122,24,.14), transparent 60%), radial-gradient(900px 520px at -12% 15%, rgba(236,0,140,.18), transparent 55%), radial-gradient(760px 460px at 55% 115%, rgba(56,189,248,.12), transparent 60%), linear-gradient(175deg, #1D0C3A 0%, #150A2E 52%, #120826 100%); }
+            .co-loader { --gold: #ffb000; --pink: #ff3d94; --violet: #8a4bff; position: relative; width: min(84vw, 78vh, 340px); aspect-ratio: 1 / 1; container-type: size; animation: coIn .45s ease both; }
+            .co-loader * { box-sizing: border-box; margin: 0; }
+            .co-core { position: absolute; left: 50%; top: 40%; width: 46cqw; height: 44cqw; transform: translate(-50%,-50%); }
+            .co-core > * { position: absolute; left: 50%; top: 50%; border-radius: 50%; transform: translate(-50%,-50%); }
+            .co-halo { width: 92cqw; height: 92cqw; background: radial-gradient(circle, rgba(255,80,160,.55), rgba(255,176,0,.22) 40%, transparent 68%); animation: coHalo 2.8s ease-in-out infinite; }
+            .co-ring1 { width: 64cqw; height: 64cqw; background: conic-gradient(from 0deg, transparent 0 50%, rgba(255,176,0,.35) 70%, #ffb000 88%, #ff3d94 99%, transparent 100%); -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 1.5cqw), #000 calc(100% - 1.5cqw)); mask: radial-gradient(farthest-side, transparent calc(100% - 1.5cqw), #000 calc(100% - 1.5cqw)); filter: drop-shadow(0 0 1.4cqw rgba(255,61,148,.85)); animation: coSpin 2.2s linear infinite; }
+            .co-ring2 { width: 70cqw; height: 70cqw; border: .3cqw dashed rgba(255,255,255,.28); animation: coSpinR 22s linear infinite; }
+            html:not([data-theme="dark"]) .co-ring2 { border-color: rgba(194,24,91,.28); }
+            .co-bob { left: 0 !important; top: 0 !important; transform: none !important; width: 100%; height: 100%; animation: coFloat 4.2s ease-in-out infinite; border-radius: 0 !important; }
+            .co-logo { position: absolute; inset: 0; background: url('/loader-logo.png') center / contain no-repeat; filter: drop-shadow(0 1.6cqw 2.4cqw rgba(0,0,0,.45)) drop-shadow(0 0 3cqw rgba(255,110,180,.35)); }
+            .co-logo::after { content: ""; position: absolute; inset: 0; -webkit-mask: url('/loader-logo.png') center / contain no-repeat; mask: url('/loader-logo.png') center / contain no-repeat; background: linear-gradient(112deg, transparent 38%, rgba(255,255,255,.95) 50%, transparent 62%); background-size: 320% 100%; background-position: 100% 0; animation: coShine 3.4s ease-in-out infinite; mix-blend-mode: overlay; opacity: .9; }
+            .co-txt { position: absolute; left: 0; right: 0; top: 72%; display: flex; flex-direction: column; align-items: center; gap: 4.5cqw; }
+            .co-title { font-size: 6.4cqw; line-height: 1.1; font-weight: 700; letter-spacing: .02em; white-space: nowrap; color: transparent; background: linear-gradient(100deg, transparent 40%, rgba(255,255,255,.95) 50%, transparent 60%) 150% 0 / 250% 100% no-repeat, linear-gradient(180deg, #fff 0%, #ffe29a 45%, #ffa31a 100%); -webkit-background-clip: text; background-clip: text; animation: coTs 3s linear infinite; filter: drop-shadow(0 .4cqw .7cqw rgba(0,0,0,.45)); }
+            html:not([data-theme="dark"]) .co-title { background-image: linear-gradient(100deg, transparent 40%, rgba(255,255,255,.95) 50%, transparent 60%), linear-gradient(92deg, #EC008C 5%, #FF2E93 42%, #FF7A18 100%); filter: drop-shadow(0 0 .8cqw rgba(255,46,147,.32)); }
+            .co-title b { font-weight: 800; }
+            .co-title em { font-style: normal; font-weight: 500; }
+            .co-dots i { font-style: normal; animation: coDt 1.2s infinite both; }
+            .co-dots i:nth-child(2) { animation-delay: .2s; }
+            .co-dots i:nth-child(3) { animation-delay: .4s; }
+            .co-track { position: relative; width: 52cqw; height: 1.9cqw; border-radius: 99px; background: rgba(127,90,160,.18); box-shadow: inset 0 .25cqw .5cqw rgba(0,0,0,.25), 0 0 0 .15cqw rgba(255,255,255,.12); overflow: hidden; }
+            html[data-theme="dark"] .co-track { background: rgba(255,255,255,.09); }
+            .co-fill { position: relative; height: 100%; width: 0; border-radius: inherit; background: linear-gradient(90deg, var(--gold), var(--pink) 60%, var(--violet)); box-shadow: 0 0 2.2cqw rgba(255,61,148,.7); animation: coFill 5s cubic-bezier(.22,.7,.3,1) forwards; }
+            .co-fill::after { content: ""; position: absolute; inset: 0; background: linear-gradient(100deg, transparent 30%, rgba(255,255,255,.55) 50%, transparent 70%); background-size: 220% 100%; animation: coBs 1.5s linear infinite; }
+            @keyframes coIn { from { opacity: 0; } to { opacity: 1; } }
+            @keyframes coSpin { to { transform: translate(-50%,-50%) rotate(360deg); } }
+            @keyframes coSpinR { to { transform: translate(-50%,-50%) rotate(-360deg); } }
+            @keyframes coFloat { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-1.3cqw) scale(1.03); } }
+            @keyframes coHalo { 0%, 100% { opacity: .55; transform: translate(-50%,-50%) scale(.92); } 50% { opacity: 1; transform: translate(-50%,-50%) scale(1.08); } }
+            @keyframes coShine { 0% { background-position: 100% 0; } 55%, 100% { background-position: 0% 0; } }
+            @keyframes coTs { to { background-position: -50% 0, 0 0; } }
+            @keyframes coDt { 0%, 80%, 100% { opacity: .15; } 40% { opacity: 1; } }
+            @keyframes coBs { from { background-position: 120% 0; } to { background-position: -100% 0; } }
+            @keyframes coFill { 0% { width: 0; } 55% { width: 62%; } 100% { width: 88%; } }
+            @media (prefers-reduced-motion: reduce) { .co-loader, .co-loader * { animation: none !important; } .co-fill { width: 88%; } }
     </style>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Hind+Siliguri:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-    <script type="module" crossorigin src="/assets/index-Bqu_v6Oe.js"></script>
+    <!-- Round 154: warm the connections the app needs at boot — the
+         API origin and the Firebase Auth/Firestore hosts — so the
+         first real calls skip DNS + TCP + TLS setup. -->
+    <link rel="preconnect" href="https://api.samirpropayments.online" crossorigin />
+    <link rel="preconnect" href="https://firestore.googleapis.com" crossorigin />
+    <link rel="preconnect" href="https://identitytoolkit.googleapis.com" crossorigin />
+    <link rel="preconnect" href="https://securetoken.googleapis.com" crossorigin />
+    <!-- Round 163: fonts split by first-paint need. Inter + Poppins carry
+         the homepage and stay render-blocking; Hind Siliguri (Bengali
+         glyphs) and JetBrains Mono (IDs/numbers in panels + checkout)
+         load async — with display=swap they were never painted before
+         arrival anyway, so nothing visible changes except that they no
+         longer hold up first paint on slow links. -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" /></noscript>
+    <script type="module" crossorigin src="/assets/index-D2wF_V65.js"></script>
     <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-Bh1tDfsg.js">
     <link rel="modulepreload" crossorigin href="/assets/vendor-MoN2eFRA.js">
     <link rel="modulepreload" crossorigin href="/assets/vendor-react-j2YN6wof.js">
-    <link rel="modulepreload" crossorigin href="/assets/vendor-firebase-DbThoDuN.js">
-    <link rel="modulepreload" crossorigin href="/assets/vendor-icons-E-qG5Uqd.js">
+    <link rel="modulepreload" crossorigin href="/assets/vendor-firebase-D7Er-s_h.js">
+    <link rel="modulepreload" crossorigin href="/assets/vendor-icons-BOz0q351.js">
     <link rel="stylesheet" crossorigin href="/assets/vendor-qcT314-W.css">
-    <link rel="stylesheet" crossorigin href="/assets/index-CdaL2Nkr.css">
+    <link rel="stylesheet" crossorigin href="/assets/index-BACEHUNz.css">
   </head>
   <body>
-    <div id="root">
-      <div class="boot-splash" aria-hidden="true">
-        <span class="boot-ring"></span>
-        <span class="boot-word">Samir<em>Pro</em>Payments</span>
-      </div>
-    </div>
+    <div class="co-shell" id="co-shell" aria-hidden="true">
+          <div class="co-loader">
+            <div class="co-core">
+              <div class="co-halo"></div>
+              <div class="co-ring2"></div>
+              <div class="co-ring1"></div>
+              <div class="co-bob"><div class="co-logo"></div></div>
+            </div>
+            <div class="co-txt">
+              <div class="co-title"><b>Opening</b> <em>Spro Payments</em></div>
+              <div class="co-track"><div class="co-fill"></div></div>
+            </div>
+          </div>
+        </div>
+    <div id="root"></div>
+    <noscript>
+      <div class="boot-noscript">Samir Pro Payments needs JavaScript enabled to load. Please enable JavaScript in your browser and reload — or reach us on WhatsApp: <a href="https://wa.me/8801607804964">+880 1607-804964</a></div>
+    </noscript>
+    <script>
+      /* Round 169: retire the checkout pre-paint loader the moment
+         the app mounts (atomic removal — no fade, no overlap), and
+         stand a boot watchdog over every route: if the app has not
+         signalled boot within ~8s (the classic stale-cache freeze —
+         a cached index.html pointing at a bundle that no longer
+         exists), reload ONCE with a cache-busting _cb parameter so
+         the browser fetches a fresh index.html. Loop-guarded by a
+         sessionStorage flag, cleared on every successful mount, so
+         it can fire at most once per tab session per failure.
+         Nothing in this script paints anything. */
+      (function () {
+        var root = document.getElementById('root');
+        var isCheckout = document.documentElement.getAttribute('data-bs') === 'checkout';
+        if (!isCheckout) {
+          var stray = document.getElementById('co-shell');
+          if (stray) stray.remove();
+        }
+        var done = false;
+        function mounted() {
+          return !!((root && root.children.length > 0) || window.__SPRO_BOOTED === true);
+        }
+        function retire() {
+          if (done) return;
+          done = true;
+          var el = document.getElementById('co-shell');
+          if (el && el.isConnected) el.remove();
+          try { sessionStorage.removeItem('spro_boot_wd'); } catch (e) { /* storage off */ }
+        }
+        if (mounted()) { retire(); return; }
+        if (root && 'MutationObserver' in window) {
+          var mo = new MutationObserver(function () {
+            if (mounted()) { mo.disconnect(); retire(); }
+          });
+          mo.observe(root, { childList: true });
+        }
+        setTimeout(function () {
+          if (done) return;
+          if (mounted()) { retire(); return; }
+          var tried = false;
+          try {
+            tried = !!sessionStorage.getItem('spro_boot_wd');
+            if (!tried) sessionStorage.setItem('spro_boot_wd', '1');
+          } catch (e) { /* storage off — the _cb change alone still prevents a tight loop via the new URL */ }
+          if (tried) return;
+          try {
+            var u = new URL(location.href);
+            u.searchParams.set('_cb', Date.now().toString(36));
+            location.replace(u.toString());
+          } catch (e) { location.reload(); }
+        }, 8000);
+      })();
+    </script>
   </body>
 </html>
