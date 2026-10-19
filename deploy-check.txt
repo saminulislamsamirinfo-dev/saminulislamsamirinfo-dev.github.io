@@ -1,3 +1,0 @@
-Vercel deploy trigger check.
-Pushed 2026-10-14T11:59:48.965438+00:00 to verify the GitHub -> Vercel auto-deploy.
-Harmless marker file - safe to delete in any later ship.
