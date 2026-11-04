@@ -2,3 +2,4 @@ Vercel deploy trigger check.
 Pushed 2026-10-14T11:59:48.965438+00:00 to verify the GitHub -> Vercel auto-deploy.
 Harmless marker file - safe to delete in any later ship.
 Pages rebuild retry 2026-11-05 01:07 +06 for Spro Pay 2.3.23 (44)
+Pages rebuild retry 2 - 2026-11-05 02:59 +06 for Spro Pay 2.3.23 (44); previous retry build stuck in building state
